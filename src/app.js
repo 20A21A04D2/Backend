@@ -25,11 +25,27 @@ setupWebSocket(server);
 
 // Middleware
 app.use(cookieParser());
+
+// Updated CORS Configuration
+const allowedOrigins = [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'https://frontend-three-self-16.vercel.app', // Add your deployed frontend URL
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
 }));
+
 app.use(express.json());
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
@@ -40,4 +56,4 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Something went wrong!' });
 });
 
-module.exports = { app, server }; 
+module.exports = { app, server };
