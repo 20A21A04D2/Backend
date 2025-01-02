@@ -110,18 +110,18 @@ exports.getRooms = async (req, res) => {
     }
 };
 
-exports.generateToken = async (req, res) => {
-    try {
-        const { roomId } = req.params;
-        const userId = req.user.userId;
+// exports.generateToken = async (req, res) => {
+//     try {
+//         const { roomId } = req.params;
+//         const userId = req.user.userId;
         
-        // Verify room exists
-        const room = await Room.findOne({ roomId });
-        if (!room) {
-            return res.status(404).json({ error: 'Room not found' });
-        }
+//         // Verify room exists
+//         const room = await Room.findOne({ roomId });
+//         if (!room) {
+//             return res.status(404).json({ error: 'Room not found' });
+//         }
 
-        // Generate token for 100ms room
+//         // Generate token for 100ms room
 //         const now = Math.floor(Date.now() / 1000);
 //         const token = JWT.sign({
 //             access_key: process.env.HMS_ACCESS_KEY,
@@ -142,8 +142,8 @@ exports.generateToken = async (req, res) => {
 //     } catch (error) {
 //         console.error('Token generation error:', error);
 //         res.status(500).json({ error: error.message });
-    }
- };
+//     }
+// };
 
 exports.getRoom = async (req, res) => {
     try {
