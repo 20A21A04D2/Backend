@@ -102,11 +102,27 @@ exports.createRoom = async (req, res) => {
 
 exports.getRooms = async (req, res) => {
     try {
+        // Check if user is authenticated
+        if (!req.user || !req.user.userId) {
+            return res.status(401).json({ 
+                error: 'Unauthorized access',
+                message: 'Please login to access rooms'
+            });
+        }
+
         const rooms = await Room.find({ active: true })
             .populate('createdBy', 'name email');
+        
+        // Add error logging
+        console.log(`Fetched ${rooms.length} rooms for user ${req.user.userId}`);
+        
         res.json(rooms);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error in getRooms:', error);
+        res.status(500).json({ 
+            error: error.message,
+            details: 'Failed to fetch rooms'
+        });
     }
 };
 
